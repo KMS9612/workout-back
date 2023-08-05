@@ -9,7 +9,6 @@ const app = express();
 const port = 8080;
 const dotenv = require("dotenv");
 
-// secret_key
 // mongoDB연동
 mongoose
   .connect(process.env.DB_URL, {
