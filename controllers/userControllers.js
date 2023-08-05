@@ -44,8 +44,9 @@ const LOG_IN = async (req, res) => {
   }
 
   // jwt발급에 필요한 변수
+  const expireTime = "1h";
   const payload = email;
-  const token = jwt.sign(payload, process.env.CRYPTO_KEY);
+  const token = jwt.sign(payload, process.env.CRYPTO_KEY, { expiresIn: expireTime });
 
   // 비밀번호 매칭 로직
   // hash(salt)된 비밀번호 복호화
