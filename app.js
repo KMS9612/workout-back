@@ -3,6 +3,7 @@ const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const usersRouter = require("./routes/userRoutes");
+const tokenRouter = require("./routes/tokenRoutes");
 require("dotenv").config();
 require("./crypto.js");
 const app = express();
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 
 // 라우터 설정
 app.use(usersRouter);
+app.use("/token", tokenRouter);
 
 // 서버 가동
 app.listen(port, () => {

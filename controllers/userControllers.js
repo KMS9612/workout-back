@@ -34,26 +34,14 @@ const LOG_IN = async (req, res) => {
   // req 정보 변수에 저장
   const email = req.body.email;
   const password = req.body.password;
+  const password_hashed = req.body.password_hashed;
 
-  // 해당 유저가 있는지 체크하는 로직 + errorHandle
-  const user = await User.findOne({
-    email,
-  });
-  if (!user) {
-    return res.status(400).json({ message: "이메일이 존재하지않습니다." });
-  }
-
-  // jwt발급에 필요한 변수
-  const jwtOptions = {
-    algorithm: "HS256", // 알고리즘 설정 - HS256
-    expiresIn: "1h", // 토큰 만료 시간 설정
-  };
-  const payload = email;
-  const token = jwt.sign(payload, process.env.CRYPTO_KEY, jwtOptions);
-
+  // Token 발급
+  const token = generateAccessToken(email);
+  const refreshToken = generateRefreshToken(email);
   // 비밀번호 매칭 로직
   // hash(salt)된 비밀번호 복호화
-  const isPasswordMatch = await bcryptjs.compare(password, user.password_hashed);
+  const isPasswordMatch = await bcryptjs.compare(password, password_hashed);
   if (!isPasswordMatch) {
     return res.status(400).json({ message: "비밀번호가 틀렸습니다." });
   } else {
@@ -61,9 +49,27 @@ const LOG_IN = async (req, res) => {
     return res.status(201).send({
       message: "로그인에 성공하였습니다.",
       accessToken: token,
-      refreshToken: "제작중..",
+      refreshToken: refreshToken,
     });
   }
+};
+
+const generateAccessToken = (email) => {
+  const jwtOptions = {
+    algorithm: "HS256", // 알고리즘 설정 - HS256
+    expiresIn: "15m", // 토큰 만료 시간 설정
+  };
+  const payload = { email };
+  const token = jwt.sign(payload, process.env.CRYPTO_KEY, jwtOptions);
+  return token;
+};
+
+const generateRefreshToken = (email) => {
+  const payload = { email };
+  const refreshToken = jwt.sign(payload, process.env.REFRESH_CRYPTO_KEY, {
+    expiresIn: "30d",
+  });
+  return refreshToken;
 };
 
 module.exports = {
