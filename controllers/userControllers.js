@@ -31,6 +31,7 @@ const FETCH_USERS = async (req, res) => {
 
 // User 로그인
 const LOG_IN = async (req, res) => {
+  console.log("로그인 시크릿키", process.env.CRYPTO_KEY);
   // req 정보 변수에 저장
   const email = req.body.email;
   const password = req.body.password;
@@ -57,7 +58,7 @@ const LOG_IN = async (req, res) => {
 const generateAccessToken = (email) => {
   const jwtOptions = {
     algorithm: "HS256", // 알고리즘 설정 - HS256
-    expiresIn: "15m", // 토큰 만료 시간 설정
+    expiresIn: "1h", // 토큰 만료 시간 설정
   };
   const payload = { email };
   const token = jwt.sign(payload, process.env.CRYPTO_KEY, jwtOptions);
