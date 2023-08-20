@@ -22,7 +22,7 @@ const CREATE_EXERCISE = async (req, res) => {
       exercise: haveTable.exercise,
     });
   } catch (err) {
-    res.status(401).json({ message: "운동 테이블 생성에 실패했습니다." + err });
+    res.status(400).json({ message: "운동 테이블 생성에 실패했습니다." + err });
   }
 };
 

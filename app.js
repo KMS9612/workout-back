@@ -9,7 +9,8 @@ require("dotenv").config();
 require("./crypto.js");
 const app = express();
 const port = 8080;
-const dotenv = require("dotenv");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./swagger");
 
 // mongoDB연동
 mongoose
@@ -34,6 +35,9 @@ app.use(
 // body-parser 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// swagger api docs 사용명시,path
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // logs
 app.use((req, res, next) => {
