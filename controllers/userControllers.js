@@ -36,6 +36,7 @@ const LOG_IN = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const password_hashed = req.body.password_hashed;
+  const username = req.body.username;
 
   // Token 발급
   const token = generateAccessToken(email);
@@ -49,6 +50,7 @@ const LOG_IN = async (req, res) => {
     // 유저검증이 성공했다면 jwt token 발급
     return res.status(201).send({
       message: "로그인에 성공하였습니다.",
+      username: username,
       accessToken: token,
       refreshToken: refreshToken,
     });

@@ -23,6 +23,7 @@ const findForLogin = async (req, res, next) => {
   }
   if (findEmail) {
     req.body.password_hashed = findEmail.password_hashed;
+    req.body.username = findEmail.username;
     next();
   }
 };
