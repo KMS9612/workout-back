@@ -26,4 +26,20 @@ const CREATE_EXERCISE = async (req, res) => {
   }
 };
 
-module.exports = { CREATE_EXERCISE };
+const FETCH_EXERCISE = async (req, res) => {
+  const { username } = req.query;
+  console.log("FETCH_EXERCISE Body", req.query);
+  try {
+    let EXERCISE_DATA = await UserExercise.findOne({ username });
+    console.log(EXERCISE_DATA, username);
+    res.status(200).json({
+      exercise: EXERCISE_DATA,
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: err,
+    });
+  }
+};
+
+module.exports = { CREATE_EXERCISE, FETCH_EXERCISE };

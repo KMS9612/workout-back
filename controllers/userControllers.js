@@ -60,7 +60,7 @@ const LOG_IN = async (req, res) => {
 const generateAccessToken = (email) => {
   const jwtOptions = {
     algorithm: "HS256", // 알고리즘 설정 - HS256
-    expiresIn: "1h", // 토큰 만료 시간 설정
+    expiresIn: "1m", // 토큰 만료 시간 설정
   };
   const payload = { email };
   const token = jwt.sign(payload, process.env.CRYPTO_KEY, jwtOptions);

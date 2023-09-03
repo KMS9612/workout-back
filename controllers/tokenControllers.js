@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const exchangeToken = (req, res) => {
   const refreshToken = req.body.refreshToken;
 
@@ -7,13 +9,14 @@ const exchangeToken = (req, res) => {
   }
 
   // 리프레쉬 토큰 검증
-  jwt.verify(refreshToken, REFRESH_SECRET_KEY, (err, decoded) => {
+  jwt.verify(refreshToken, process.env.REFRESH_CRYPTO_KEY, (err, decoded) => {
     // Refresh Token이 만료되거나 유효하지 않은 경우
     if (err) {
+      console.log(err.message);
       return res.sendStatus(403);
     }
     const payload = { email: decoded.email };
-    const options = { expiresin: "15m" };
+    const options = { expiresIn: "15m" };
     const newAccessToken = jwt.sign(payload, process.env.CRYPTO_KEY, options);
 
     return res
