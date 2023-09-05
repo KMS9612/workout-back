@@ -7,7 +7,7 @@ const tokenRouter = require("./routes/tokenRoutes");
 const exerciseRouter = require("./routes/exerciseRoutes");
 require("dotenv").config();
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./swagger");
 
