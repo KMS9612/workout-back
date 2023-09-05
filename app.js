@@ -6,7 +6,6 @@ const usersRouter = require("./routes/userRoutes");
 const tokenRouter = require("./routes/tokenRoutes");
 const exerciseRouter = require("./routes/exerciseRoutes");
 require("dotenv").config();
-// require("./crypto.js");
 const app = express();
 const port = 8080;
 const swaggerUi = require("swagger-ui-express");
