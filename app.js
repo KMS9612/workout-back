@@ -27,7 +27,7 @@ mongoose
 // cors 허용 도메인
 app.use(
   cors({
-    origin: "http://localhost:3000", // 허용할 도메인
+    origin: ["http://localhost:3000", "https://workout-react.vercel.app"], // 허용할 도메인
     credentials: true, // 요청 헤더에 쿠키를 실어 보낼 수 있도록 함
   })
 );
