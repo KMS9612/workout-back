@@ -26,9 +26,17 @@ const routineSchema = new mongoose.Schema({
   routine: [
     {
       routine_title: { type: String, require: true },
+      routine_exercise: [
+        {
+          exercise_name: { type: String, require: true },
+          exercise_type: { type: String, require: true },
+        },
+      ],
+      routine_rest: [{ routine_title: { type: String, require: true }, rest_time: { type: Number, require: true } }],
     },
   ],
 });
 
 const UserExercise = mongoose.model("Exercise", exerciseSchema);
-module.exports = { UserExercise };
+const UserRoutine = mongoose.model("Routine", routineSchema);
+module.exports = { UserExercise, UserRoutine };

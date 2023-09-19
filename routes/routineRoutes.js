@@ -1,16 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { CREATE_EXERCISE, FETCH_EXERCISE, DELETE_EXERCISE_BY_NAME } = require("../controllers/exerciseControllers");
 const { verifyToken } = require("../middlewares/check_token");
 
-router.post("/create_exercise", verifyToken, CREATE_EXERCISE);
+router.post("/create_routine", verifyToken, CREATE_ROUTINE);
 /**
  * @swagger
- * /exercise/create_exercise:
+ * /routine/create_routine:
  *   post:
  *     summary: Create a new exercise
  *     tags:
- *       - Exercise
+ *       - Create Routine
  *     requestBody:
  *       content:
  *         application/json:
@@ -19,15 +18,20 @@ router.post("/create_exercise", verifyToken, CREATE_EXERCISE);
  *             properties:
  *               username:
  *                 type: string
- *               exercise:
+ *               routine:
  *                 type: array
  *                 items:
  *                   type: object
  *                   properties:
- *                     exercise_name:
+ *                     routine_name:
  *                       type: string
- *                     exercise_type:
- *                       type: string
+ *                     routine_exercise:
+ *                       type: array
+ *                       item:
+ *                         type: object
+ *                         properties:
+ *                            exercise_title: string
+ *                            exercise_type: string
  *     responses:
  *       200:
  *         description: Exercise created successfully
@@ -35,7 +39,7 @@ router.post("/create_exercise", verifyToken, CREATE_EXERCISE);
  *         description: Bad Request
  */
 
-router.get("/fetch_exercise", verifyToken, FETCH_EXERCISE);
+router.get("/fetch_routine", verifyToken, FETCH_EXERCISE);
 /**
  * @swagger
  * /exercise/fetch_exercise:
@@ -54,31 +58,6 @@ router.get("/fetch_exercise", verifyToken, FETCH_EXERCISE);
  *     responses:
  *       200:
  *         description: Exercise created successfully
- *       400:
- *         description: Bad Request
- */
-
-router.delete("/delete_exercise_by_name", verifyToken, DELETE_EXERCISE_BY_NAME);
-/**
- * @swagger
- * /exercise/delete_exeracise_by_name:
- *   delete:
- *     summary: Delete Exercise By Exercise Name
- *     tags:
- *       - Exercise
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               exercise_name:
- *                 type: string
- *     responses:
- *       200:
- *         description: Exercise Deleted successfully
  *       400:
  *         description: Bad Request
  */
