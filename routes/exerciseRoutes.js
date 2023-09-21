@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { CREATE_EXERCISE, FETCH_EXERCISE, DELETE_EXERCISE_BY_NAME } = require("../controllers/exerciseControllers");
+const { CREATE_EXERCISE, FETCH_EXERCISE, DELETE_EXERCISE_BY_NAME, DELETE_EXERCISE_ALL } = require("../controllers/exerciseControllers");
 const { verifyToken } = require("../middlewares/check_token");
 
 router.post("/create_exercise", verifyToken, CREATE_EXERCISE);
@@ -82,4 +82,6 @@ router.delete("/delete_exercise_by_name", verifyToken, DELETE_EXERCISE_BY_NAME);
  *       400:
  *         description: Bad Request
  */
+
+router.delete("/delete_exercise_all", verifyToken, DELETE_EXERCISE_ALL);
 module.exports = router;

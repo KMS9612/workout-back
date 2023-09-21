@@ -49,7 +49,7 @@ const FETCH_EXERCISE = async (req, res) => {
 };
 
 const DELETE_EXERCISE_BY_NAME = async (req, res) => {
-  const { username, exercise_name } = req.body;
+  const { username, exercise_name } = req.query;
 
   try {
     const exerciseTarget = await UserExercise.find({ username });
