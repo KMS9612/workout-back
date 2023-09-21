@@ -49,23 +49,25 @@ const FETCH_EXERCISE = async (req, res) => {
 };
 
 const DELETE_EXERCISE_BY_NAME = async (req, res) => {
+  console.log(req.query);
   const { username, exercise_name } = req.query;
 
   try {
-    const exerciseTarget = await UserExercise.find({ username });
-
-    if (!deletedExerciseOne) {
+    const exerciseTarget = await UserExercise.findOne({ username });
+    console.log(exerciseTarget);
+    if (!exerciseTarget) {
       return res.status(404).json({ message: "유저 데이터가 없습니다." });
     }
     // exercise 배열을 가공해서 저장.
-    const target_index = exerciseTarget.exercise.findIndex((item) => item.exercise_name === exercise_name);
+    const target_index = exerciseTarget.exercise.findIndex((item) => item.exercise_name == exercise_name);
     if (target_index === -1) {
       return res.status(404).json({ message: "삭제할 데이터가 없습니다." });
     }
 
     exerciseTarget.exercise.splice(target_index, 1);
 
-    exerciseTarget.save();
+    await exerciseTarget.save();
+    return res.status(200).json({ message: exercise_name + "을 성공적으로 삭제했습니다." });
   } catch (err) {
     return res.status(400).json({ message: "데이터 삭제에 실패했습니다." });
   }
