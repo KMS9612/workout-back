@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
+mongoose.set("debug", true);
 const usersRouter = require("./routes/userRoutes");
 const tokenRouter = require("./routes/tokenRoutes");
 const exerciseRouter = require("./routes/exerciseRoutes");
@@ -43,8 +44,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // logs
 app.use((req, res, next) => {
-  console.log("Request headers:", req.headers);
-  console.log("Request body:", req.body);
+  // console.log("Request headers:", req.headers);
+  // console.log("Request body:", req.body);
   next();
 });
 

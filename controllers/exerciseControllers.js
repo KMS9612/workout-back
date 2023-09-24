@@ -10,8 +10,9 @@ const CREATE_EXERCISE = async (req, res) => {
 
     // 테이블이 없다면 새로운 userExercise테이블 생성
     if (!haveTable) {
-      haveTable = new UserExercise({ username, exercise, uid });
-      return res.status(200).json({ message: "운동 테이블을 생성했습니다.", exercise: haveTable.exercise, uid: uid });
+      haveTable = new UserExercise({ uid, username, exercise });
+      await haveTable.save();
+      return res.status(200).json({ uid: uid, message: "운동 테이블을 생성했습니다.", exercise: haveTable.exercise });
     }
     // DB에 이미 있는 exercise_name인지 파악
     const isDuplicate = haveTable.exercise.some((el) => el.exercise_name === exercise[0].exercise_name);
@@ -23,27 +24,24 @@ const CREATE_EXERCISE = async (req, res) => {
     await haveTable.save();
     return res.status(200).json({
       message: "운동 테이블을 생성했습니다.",
-      username: haveTable.username,
-      exercise: haveTable.exercise,
-      uid: haveTable.uid,
+      data: [{ uid: haveTable.uid, username: haveTable.username, exercise: haveTable.exercise }],
     });
   } catch (err) {
-    res.status(400).json({ message: "운동 테이블 생성에 실패했습니다." + err });
+    res.status(400).json({ message: "운동 테이블 생성에 실패했습니다.", err });
   }
 };
 
 const FETCH_EXERCISE = async (req, res) => {
-  const { username } = req.query;
   const uid = req.cookies.uid;
-  console.log("FETCH_EXERCISE Params", req.query, uid);
+
   try {
     let EXERCISE_DATA = await UserExercise.findOne({ uid });
-    console.log(EXERCISE_DATA, username);
-    res.status(200).json({
+
+    return res.status(200).json({
       exercise: EXERCISE_DATA,
     });
   } catch (err) {
-    res.status(400).json({
+    return res.status(400).json({
       message: err,
     });
   }
