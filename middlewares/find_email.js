@@ -13,6 +13,19 @@ const findForSignUp = async (req, res, next) => {
   }
 };
 
+const findUsername = async (req, res, next) => {
+  const username = req.body.username;
+  const haveUsername = await User.findOne({ username });
+
+  console.log("findUserName:", haveUsername);
+  if (haveUsername) {
+    return res.status(400).json({ message: "이미 존재하는 유저이름 입니다." });
+  }
+  if (!haveUsername) {
+    next();
+  }
+};
+
 const findForLogin = async (req, res, next) => {
   const findEmail = await User.findOne({
     email: req.body.email,
@@ -28,4 +41,4 @@ const findForLogin = async (req, res, next) => {
   }
 };
 
-module.exports = { findForLogin, findForSignUp };
+module.exports = { findForLogin, findForSignUp, findUsername };

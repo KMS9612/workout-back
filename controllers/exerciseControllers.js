@@ -3,29 +3,29 @@ const { UserExercise } = require("../models/routine");
 const CREATE_EXERCISE = async (req, res) => {
   // username: 유저이름, exercise = [{exercise_name, exercise_type}]
   const { username, exercise } = req.body;
+  const uid = req.cookies.uid;
 
   try {
-    let haveTable = await UserExercise.findOne({ username });
+    let haveTable = await UserExercise.findOne({ uid });
 
+    // 테이블이 없다면 새로운 userExercise테이블 생성
     if (!haveTable) {
-      // 테이블이 없다면 새로운 userExercise테이블 생성
-      haveTable = new UserExercise({ username, exercise });
-    } else {
-      // DB에 이미 있는 exercise_name인지 파악
-      haveTable.exercise.map((el) => {
-        if (el.exercise_name === exercise[0].exercise_name) {
-          return res.status(400).json({ message: "이미 존재하는 이름의 운동입니다." });
-        }
-      });
-      // 테이블이 있다면 exercise 배열에 값 추가
-      haveTable.exercise.push(exercise[0]);
+      haveTable = new UserExercise({ username, exercise, uid });
+      return res.status(200).json({ message: "운동 테이블을 생성했습니다.", exercise: haveTable.exercise, uid: uid });
+    }
+    // DB에 이미 있는 exercise_name인지 파악
+    const isDuplicate = haveTable.exercise.some((el) => el.exercise_name === exercise[0].exercise_name);
+    if (isDuplicate) {
+      return res.status(400).json({ message: "중복되는 이름의 운동이 있습니다." });
     }
 
+    haveTable.exercise.push(exercise[0]);
     await haveTable.save();
-    res.status(200).json({
+    return res.status(200).json({
       message: "운동 테이블을 생성했습니다.",
       username: haveTable.username,
       exercise: haveTable.exercise,
+      uid: haveTable.uid,
     });
   } catch (err) {
     res.status(400).json({ message: "운동 테이블 생성에 실패했습니다." + err });
@@ -34,9 +34,10 @@ const CREATE_EXERCISE = async (req, res) => {
 
 const FETCH_EXERCISE = async (req, res) => {
   const { username } = req.query;
-  console.log("FETCH_EXERCISE Body", req.query);
+  const uid = req.cookies.uid;
+  console.log("FETCH_EXERCISE Params", req.query, uid);
   try {
-    let EXERCISE_DATA = await UserExercise.findOne({ username });
+    let EXERCISE_DATA = await UserExercise.findOne({ uid });
     console.log(EXERCISE_DATA, username);
     res.status(200).json({
       exercise: EXERCISE_DATA,
@@ -49,12 +50,11 @@ const FETCH_EXERCISE = async (req, res) => {
 };
 
 const DELETE_EXERCISE_BY_NAME = async (req, res) => {
-  console.log(req.query);
-  const { username, exercise_name } = req.query;
+  const { exercise_name } = req.query;
+  const uid = req.cookies.uid;
 
   try {
-    const exerciseTarget = await UserExercise.findOne({ username });
-    console.log(exerciseTarget);
+    const exerciseTarget = await UserExercise.findOne({ uid });
     if (!exerciseTarget) {
       return res.status(404).json({ message: "유저 데이터가 없습니다." });
     }
@@ -75,9 +75,10 @@ const DELETE_EXERCISE_BY_NAME = async (req, res) => {
 
 const DELETE_EXERCISE_ALL = async () => {
   const { username } = req.body;
+  const uid = req.cookies.uid;
 
   try {
-    const deletedExercises = await UserExercise.deleteMany({ username });
+    const deletedExercises = await UserExercise.deleteMany({ uid });
 
     if (deletedExercises.deletedCount === 0) {
       return res.status(404).json({ message: "유저 데이터가 없습니다." });

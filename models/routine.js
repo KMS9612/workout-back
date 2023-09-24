@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const exerciseSchema = new mongoose.Schema(
   {
+    uid: {
+      type: String,
+      require: true,
+    },
     username: {
       type: String,
       required: true,

@@ -7,13 +7,13 @@ const CREATE_USER = async (req, res) => {
   /* 23.08.05 CREATE_USER는 오로지 회원가입만을 위한 로직을 남기고 유효성확인, 이메일중복검사는 미들웨어로 변경했습니다. */
 
   // 클라이언트에서 요청시 body에 담겨오는 정보를 저장하는 변수
-  const { username, email, password_hashed } = req.body;
+  const { username, email, password_hashed, uid } = req.body;
 
   // models 폴더에서 받아오는 User 스키마
-  const user = new User({ username, email, password_hashed });
+  const user = new User({ username, email, password_hashed, uid });
   try {
     await user.save();
-    res.status(201).json({ username: user.username, email: user.email });
+    res.status(201).json({ username: user.username, email: user.email, uid: user.uid });
   } catch (error) {
     res.status(500).json({ message: "사용자 생성에 실패했습니다.", error });
   }
@@ -38,11 +38,14 @@ const LOG_IN = async (req, res) => {
   const password_hashed = req.body.password_hashed;
   const username = req.body.username;
 
+  const UserInfo = await User.findOne({ email });
+  const uid = UserInfo.uid;
+
   // Token 발급
   const token = generateAccessToken(email);
   const refreshToken = generateRefreshToken(email);
   // 비밀번호 매칭 로직
-  // hash(salt)된 비밀번호 복호화
+  // hash(salt)된 비밀번호 비교
   const isPasswordMatch = await bcryptjs.compare(password, password_hashed);
   if (!isPasswordMatch) {
     return res.status(400).json({ message: "비밀번호가 틀렸습니다." });
@@ -53,6 +56,7 @@ const LOG_IN = async (req, res) => {
       username: username,
       accessToken: token,
       refreshToken: refreshToken,
+      uid: uid,
     });
   }
 };

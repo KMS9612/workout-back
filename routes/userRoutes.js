@@ -3,10 +3,11 @@ const router = express.Router();
 const UserController = require("../controllers/userControllers");
 const { validateSignupRules, validateSignup } = require("../middlewares/userValidate");
 const { hashPassword } = require("../middlewares/password_hash");
-const { findForLogin, findForSignUp } = require("../middlewares/find_email");
+const { findForLogin, findForSignUp, findUsername } = require("../middlewares/find_email");
 const { verifyToken } = require("../middlewares/check_token");
+const { createUid } = require("../middlewares/create_UID");
 
-router.post(`/CREATE_USER`, validateSignupRules, validateSignup, findForSignUp, hashPassword, UserController.CREATE_USER);
+router.post(`/CREATE_USER`, validateSignupRules, validateSignup, findForSignUp, findUsername, hashPassword, createUid, UserController.CREATE_USER);
 /**
  * @swagger
  * /CREATE_USER:

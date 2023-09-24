@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 8080;
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./swagger");
-
+const cookieParser = require("cookie-parser");
 // mongoDB연동
 mongoose
   .connect(process.env.DB_URL, {
@@ -34,6 +34,9 @@ app.use(
 // body-parser 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// cookie-parser
+app.use(cookieParser());
 
 // swagger api docs 사용명시,path
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
