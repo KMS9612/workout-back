@@ -22,6 +22,10 @@ const exerciseSchema = new mongoose.Schema(
 );
 
 const routineSchema = new mongoose.Schema({
+  uid: {
+    type: String,
+    require: true,
+  },
   username: {
     type: String,
     required: true,
@@ -34,9 +38,10 @@ const routineSchema = new mongoose.Schema({
         {
           exercise_name: { type: String, require: true },
           exercise_type: { type: String, require: true },
+          exercise_reps: { type: Number, require: true },
+          exercise_sets: { type: Number, require: true },
         },
       ],
-      routine_rest: [{ routine_title: { type: String, require: true }, rest_time: { type: Number, require: true } }],
     },
   ],
 });

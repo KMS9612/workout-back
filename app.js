@@ -6,6 +6,7 @@ mongoose.set("debug", true);
 const usersRouter = require("./routes/userRoutes");
 const tokenRouter = require("./routes/tokenRoutes");
 const exerciseRouter = require("./routes/exerciseRoutes");
+const routineRouter = require("./routes/routineRoutes");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 8080;
@@ -53,6 +54,7 @@ app.use((req, res, next) => {
 app.use(usersRouter);
 app.use("/token", tokenRouter);
 app.use("/exercise", exerciseRouter);
+app.use("/routine", routineRouter);
 
 // 서버 가동
 app.listen(port, () => {

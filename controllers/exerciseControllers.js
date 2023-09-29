@@ -71,8 +71,7 @@ const DELETE_EXERCISE_BY_NAME = async (req, res) => {
   }
 };
 
-const DELETE_EXERCISE_ALL = async () => {
-  const { username } = req.body;
+const DELETE_EXERCISE_ALL = async (req, res) => {
   const uid = req.cookies.uid;
 
   try {
@@ -82,7 +81,7 @@ const DELETE_EXERCISE_ALL = async () => {
       return res.status(404).json({ message: "유저 데이터가 없습니다." });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       message: `${username}님의 모든 운동 데이터를 성공적으로 삭제했습니다.`,
       deleted_count: deletedExercises.deletedCount,
     });
