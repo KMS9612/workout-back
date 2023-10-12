@@ -32,6 +32,22 @@ const CREATE_ROUTINE = async (req, res) => {
   }
 };
 
+const UPDATE_ROUTINE = async (req, res) => {
+  const { routine_exercise } = req.body;
+  const { uid } = req.cookies;
+
+  try {
+    let origin = await UserRoutine.findOne({ uid });
+
+    origin.routine.routine_exercise = routine_exercise;
+
+    await origin.save();
+    return res.status(200).json({ message: "루틴 업데이트에 성공했습니다.", data: origin });
+  } catch (err) {
+    return res.status(400).json({ message: "루틴 업데이트에 실패했습니다.", error: err });
+  }
+};
+
 const FETCH_ROUTINES = async (req, res) => {
   const { uid } = req.cookies;
 
@@ -104,4 +120,4 @@ const DELETE_ROUTINE_ALL = async (req, res) => {
   }
 };
 
-module.exports = { CREATE_ROUTINE, FETCH_ROUTINES, FETCH_ROUTINE_INFO, DELETE_ROUTINE_BY_NAME, DELETE_ROUTINE_ALL };
+module.exports = { CREATE_ROUTINE, FETCH_ROUTINES, FETCH_ROUTINE_INFO, DELETE_ROUTINE_BY_NAME, DELETE_ROUTINE_ALL, UPDATE_ROUTINE };

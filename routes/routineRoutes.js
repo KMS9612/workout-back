@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../middlewares/check_token");
-const { CREATE_ROUTINE, FETCH_ROUTINES, FETCH_ROUTINE_INFO, DELETE_ROUTINE_ALL, DELETE_ROUTINE_BY_NAME } = require("../controllers/routineControllers");
+const { CREATE_ROUTINE, FETCH_ROUTINES, FETCH_ROUTINE_INFO, DELETE_ROUTINE_ALL, DELETE_ROUTINE_BY_NAME, UPDATE_ROUTINE } = require("../controllers/routineControllers");
 
 router.post("/create_routine", verifyToken, CREATE_ROUTINE);
 /**
@@ -119,7 +119,7 @@ router.delete("/delete_routines", verifyToken, DELETE_ROUTINE_ALL);
 /**
  * @swagger
  * /routine/delete_routines:
- *   post:
+ *   delete:
  *     summary: Delete All Routine
  *     tags:
  *       - Delete All Routine
@@ -131,6 +131,38 @@ router.delete("/delete_routines", verifyToken, DELETE_ROUTINE_ALL);
  *             properties:
  *               uid:
  *                 type: string
+ *     responses:
+ *       200:
+ *         description: Routines Deleted successfully
+ *       400:
+ *         description: Bad Request
+ */
+
+router.post("/update_routine", verifyToken, UPDATE_ROUTINE);
+/**
+ * @swagger
+ * /routine/update_routine:
+ *   post:
+ *     summary: Update Routine Exercise
+ *     tags:
+ *       - Update Routine Exercise
+ *     requestParams:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               uid:
+ *                 type: string
+ *               routine_exercise:
+ *                 type: array
+ *                 item:
+ *                   type: object
+ *                   properties:
+ *                    exercise_title: String
+ *                    exercise_type: String
+ *                    exercise_reps: Number
+ *                    exercise_sets: Number
  *     responses:
  *       200:
  *         description: Routines Deleted successfully
