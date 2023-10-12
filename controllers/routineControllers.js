@@ -33,13 +33,14 @@ const CREATE_ROUTINE = async (req, res) => {
 };
 
 const UPDATE_ROUTINE = async (req, res) => {
-  const { routine_exercise } = req.body;
+  const { routine_uid, routine_exercise } = req.body;
   const { uid } = req.cookies;
 
   try {
     let origin = await UserRoutine.findOne({ uid });
-
-    origin.routine.routine_exercise = routine_exercise;
+    // 요청이 들어온 루틴의 인덱스를 찾아서 해당 인덱스의 루틴만 수정하기.
+    const routine_index = origin.routine.findIndex((el) => el._id == routine_uid);
+    origin.routine[routine_index].routine_exercise = routine_exercise;
 
     await origin.save();
     return res.status(200).json({ message: "루틴 업데이트에 성공했습니다.", data: origin });
